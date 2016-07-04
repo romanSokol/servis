@@ -11,14 +11,73 @@
 	<!-- end -->
 	<!-- React.js -->
 		<script src= "https://fb.me/react-15.1.0.js" ></script> 
-		<script src= "https://fb.me/react-dom-15.1.0.js" ></script>	
+		<script src= "https://fb.me/react-dom-15.1.0.js" ></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.6.15/browser.js"></script>	
     <!--  -->
 </head>
 <body>
+	
 
+	<div id="content"></div>
 
+    <script type="text/babel">
+    		// Создаем статистический массив объектов с параметрами id, name, time для хранения информации о мероприятиях
+    	 var ACTIONS = [
+            {
+                id: 1,
+                name: 'Футбол',
+                time: '10:00'
+            }, {
+                id: 2,
+                name: 'Волейбол',
+                time: '11:00'
+            }, {
+                id: 3,
+                name: 'Баскетбол',
+                time: '12:00'
+            }, {
+                id: 4,
+                name: 'Бег на месте',
+                time: '13:00'
+            }
+        ];
 
+        // Создаем компонет "Мероприятие", для того, чтобы можно было его повторно 
+        // использовать множество раз. Для вывода информации обращаемся сначала к 
+        // компоненту, затем к его параетрам и указываем имя нужного нам параметра
+        var Action = React.createClass({
+        	render: function() {
+        		return <li> {this.props.name} </li>
+        	}
+        });
 
+        // Создаем компонет "Список мероприятий" для вывода в нем компонетов
+         // "Мероприятие". При этом формируем структуру документа div внутри которого
+         //  распологается список ul 
+		var ActionList = React.createClass({
+		            render: function() {
+		                return (
+		                	<div className="row">
+		                		<ul className="columns large-12 primary callout">
+		                			{
+		                				ACTIONS.map(function(el){
+		                					return <Action name={el.name} />;
+		                				})
+		                			}
+		                		</ul>
+		                	</div>
+		                );		
+		            }		
+		        });		
+		// Обращаемся к дереву DOM и выводим в тело документа компонет "Список
+		//  мероприятий" в div с id "контент"
+		        ReactDOM.render(
+		                <ActionList />,
+		            document.getElementById("content")
+		        );
+    </script>
+
+<!-- В качестве итога получаем список из названий мероприятий -->
 
 </body>
 </html>
