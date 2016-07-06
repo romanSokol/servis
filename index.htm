@@ -21,6 +21,8 @@
 	<div id="content"></div>
 
     <script type="text/babel">
+    	var actionName;
+    	var actionTime;
     		// Создаем статистический массив объектов с параметрами id, name, time для хранения информации о мероприятиях
     	 var ACTIONS = [
             {
@@ -42,26 +44,79 @@
             }
         ];
 
+  //       ACTIONS[ACTIONS.length] = {
+		// 	name: 'прыжки на месте',
+		// 	time: '21:00'
+		// }
+
         // Создаем компонет "Мероприятие", для того, чтобы можно было его повторно 
         // использовать множество раз. Для вывода информации обращаемся сначала к 
         // компоненту, затем к его параетрам и указываем имя нужного нам параметра
         var Action = React.createClass({
         	render: function() {
-        		return <li> {this.props.name} </li>
+        		return <li>
+        					<div> {this.props.name} {this.props.time} <a href="#">X</a></div>
+
+        				</li>
         	}
         });
+
 
         // Создаем компонет "Список мероприятий" для вывода в нем компонетов
          // "Мероприятие". При этом формируем структуру документа div внутри которого
          //  распологается список ul 
+
+
 		var ActionList = React.createClass({
+			// получаем изначальное состояние компонента 
+			getInitialState: function() {
+				return {
+					displayedActions: ACTIONS
+				};
+			},
+
+			// обрабатываем данные из input и записываем в переменную
+			enterActionName: function(event){
+				actionName = event.target.value.toLowerCase();
+			},
+
+			// обрабатываем данные из input и записываем в переменную
+			enterActionTime: function(event){
+				actionTime = event.target.value;
+			},
+
+			saveAction: function(event){
+				ACTIONS[ACTIONS.length] = {
+        			id: ACTIONS.length + 1,
+					name: actionName,
+					time: actionTime
+				};
+				// записываем в состояние компонента дополненный массив объектов
+				var displayedActions = ACTIONS;
+				// методом setState перерисовываем компонет
+				this.setState({
+					displayedActions: displayedActions
+				});
+			},
+
+			
+
 		            render: function() {
 		                return (
 		                	<div className="row">
-		                		<ul className="columns large-12 primary callout">
+		                		<div className="columns large-6">
+		                			<input type="text" onChange={this.enterActionName} />
+		                			<input type="number" onChange={this.enterActionTime} />
+		                			<button type="button" className="success button" onClick={this.saveAction}>Save</button>
+		                		</div>
+		                		<ul className="columns large-6 primary callout">
 		                			{
-		                				ACTIONS.map(function(el){
-		                					return <Action name={el.name} />;
+		                				this.state.displayedActions.map(function(el){
+		                					return <Action 
+		                						key={el.id} 
+		                						name={el.name} 
+		                						time={el.time}
+		                					 />;
 		                				})
 		                			}
 		                		</ul>
@@ -75,9 +130,17 @@
 		                <ActionList />,
 		            document.getElementById("content")
 		        );
+
+
+
     </script>
 
 <!-- В качестве итога получаем список из названий мероприятий -->
+
+
+<!-- *return <Action key={el.id} name={el.name} /> 
+ задаем также параметр key для того, чтобы элементы массива имели свой уникальный номер(ключ)
+иначе элементы являются безликими и на это ругается консоль  -->
 
 </body>
 </html>
